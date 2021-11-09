@@ -4,18 +4,21 @@ import br.com.ifood.dao.RestauranteDAO;
 import br.com.ifood.entities.Restaurante;
 
 import java.io.*;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "RestauranteServlet", value = "/RestauranteServlet")
+@WebServlet(name = "RestauranteServlet", value = "RestauranteServlet")
 public class RestauranteServlet extends HttpServlet {
 
     RestauranteDAO restauranteDAO = new RestauranteDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        restauranteDAO.getAll();
+        List<Restaurante> restaurantes = restauranteDAO.getAll();
+        request.setAttribute("restaurantesList", restaurantes);
+        request.getRequestDispatcher("/index.jsp");
     }
 
     @Override
@@ -35,6 +38,8 @@ public class RestauranteServlet extends HttpServlet {
         restaurante.setRG(request.getParameter("RG"));
 
         restauranteDAO.insert(restaurante);
+
+        response.sendRedirect("/ifood_war_exploded");
     }
 
     public void destroy() {
